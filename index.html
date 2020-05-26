@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>DZ Zones - Mayskoe</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="images/favicon-192x192.png" sizes="192x192"/>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+    <script src="js/leaflet-slider.js"></script>
+
+    <link rel="stylesheet" href="css/leaflet-slider.css" />
+    <style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		#map {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+
+
+</head>
+<body>
+
+<div id='map'></div>
+
+<script src="js/javascript.js" type="text/javascript"></script>
+
+<script>
+    var map;
+	var zonesLayer;
+	var updateMap = function(config) {
+
+        zonesLayer.clearLayers();
+
+        var data = zonesCalc.getData(config)
+        var jumprun_shape = L.polyline([dz_data['location'], data['jumprun_pos']], {color: 'red', opacity: 0.5}).addTo(zonesLayer);
+
+        var general_opening_zone_shape = L.polygon(data['general_opening_zone'], {color: 'red', opacity: 0.5}).addTo(zonesLayer);
+        general_opening_zone_shape.bindTooltip('General Opening Zone')
+
+        var ws_left_opening_zone_shape = L.polygon(data['ws_left_opening_zone'], {color: 'blue', opacity: 0.5}).addTo(zonesLayer);
+        ws_left_opening_zone_shape.bindTooltip('WS Left Pattern Opening Zone')
+        var ws_right_opening_zone_shape = L.polygon(data['ws_right_opening_zone'], {color: 'blue', opacity: 0.5}).addTo(zonesLayer);
+        ws_right_opening_zone_shape.bindTooltip('WS Right Pattern Opening Zone')
+
+        var ws_left_pattern = L.polyline(
+            [data['jumprun_pos'], data['first_left_turn_pos'], data['second_left_turn_pos'], data['deploy_left_turn_pos']
+        ]).addTo(zonesLayer);
+
+        var ws_right_pattern = L.polyline(
+            [data['jumprun_pos'], data['first_right_turn_pos'], data['second_right_turn_pos'], data['deploy_right_turn_pos']
+        ]).addTo(zonesLayer);
+
+	}
+
+    var readyState = function(e) {
+        map = L.map('map').setView(dz_data['location'], 14);
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token='+config['access_token'], {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            id: 'mapbox/satellite-v9',
+            tileSize: 512,
+            zoomOffset: -1
+	    }).addTo(map);
+
+        var general_lz_shape = L.polygon([dz_data['general_landing_zone']], {color: 'green', opacity: 0.5}).addTo(map);
+        general_lz_shape.bindTooltip('General Landing Zone');
+
+        var tandem_lz_shape = L.polygon([dz_data['tandem_landing_zone']], {color: 'yellow', opacity: 0.5}).addTo(map);
+        tandem_lz_shape.bindTooltip('Tandem Landing Zone');
+
+        zonesLayer = L.layerGroup().addTo(map);
+        zonesCalc = new ZonesCalc()
+        updateMap(config);
+
+        slider = L.control.slider(
+            function(value) {
+                config['jumprun_heading'] = parseFloat(value);
+                updateMap(config)
+            },
+            {
+                id: 'slider',
+                'orientation': 'vertical',
+                max: 360,
+                value: config['jumprun_heading'],
+                step: 1,
+                size: '250px',
+                logo: 'H'
+            }
+        ).addTo(map);
+    }
+
+    window.addEventListener('DOMContentLoaded', readyState);
+</script>
+
+
+
+</body>
+</html>
