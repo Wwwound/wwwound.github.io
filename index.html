@@ -45,12 +45,12 @@
         var jumprun_shape = L.polyline([dz_data['location'], data['jumprun_pos']], {color: 'red', opacity: 0.5}).addTo(zonesLayer);
 
         var general_opening_zone_shape = L.polygon(data['general_opening_zone'], {color: 'red', opacity: 0.5}).addTo(zonesLayer);
-        general_opening_zone_shape.bindTooltip('General Opening Zone')
+        general_opening_zone_shape.bindTooltip('No Fly Zone')
 
         var ws_left_opening_zone_shape = L.polygon(data['ws_left_opening_zone'], {color: 'blue', opacity: 0.5}).addTo(zonesLayer);
-        ws_left_opening_zone_shape.bindTooltip('WS Left Pattern Opening Zone')
+        ws_left_opening_zone_shape.bindTooltip('WS Left Pattern Deployment Zone')
         var ws_right_opening_zone_shape = L.polygon(data['ws_right_opening_zone'], {color: 'blue', opacity: 0.5}).addTo(zonesLayer);
-        ws_right_opening_zone_shape.bindTooltip('WS Right Pattern Opening Zone')
+        ws_right_opening_zone_shape.bindTooltip('WS Right Pattern Deployment Zone')
 
         var ws_left_pattern = L.polyline(
             [data['jumprun_pos'], data['first_left_turn_pos'], data['second_left_turn_pos'], data['deploy_left_turn_pos']
