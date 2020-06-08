@@ -13,8 +13,11 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
     <script src="js/leaflet-slider.js"></script>
+    <script src="js/leaflet-panel-layers.min.js"></script>
+    <script src="js/leaflet.polylineDecorator.js"></script>
 
     <link rel="stylesheet" href="css/leaflet-slider.css" />
+    <link rel="stylesheet" href="css/leaflet-panel-layers.min.css " />
     <style>
 		html, body {
 			height: 100%;
@@ -25,8 +28,6 @@
 			height: 100%;
 		}
 	</style>
-
-
 </head>
 <body>
 
@@ -39,26 +40,63 @@
 	var zonesLayer;
 	var updateMap = function(config) {
 
-        zonesLayer.clearLayers();
+        openingZonesLayer.clearLayers();
+        wsLinesLayer.clearLayers();
+        wspLinesLayer.clearLayers();
 
         var data = zonesCalc.getData(config)
-        var jumprun_shape = L.polyline([dz_data['location'], data['jumprun_pos']], {color: 'red', opacity: 0.5}).addTo(zonesLayer);
+        var jumprun_shape = L.polyline([dz_data['location'], data['jumprun_pos']], {color: 'red', opacity: 0.5}).addTo(openingZonesLayer);
+        var jumprun_arrows_shape = L.polylineDecorator(jumprun_shape, {
+            patterns: [
+                { offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 1, weight: 1, color: 'red'}}) }
+            ]
+        }).addTo(openingZonesLayer);
 
-        var general_opening_zone_shape = L.polygon(data['general_opening_zone'], {color: 'red', opacity: 0.5}).addTo(zonesLayer);
+        var general_opening_zone_shape = L.polygon(data['general_opening_zone'], {color: 'red', opacity: 0.5}).addTo(openingZonesLayer);
         general_opening_zone_shape.bindTooltip('No Fly Zone')
 
-        var ws_left_opening_zone_shape = L.polygon(data['ws_left_opening_zone'], {color: 'blue', opacity: 0.5}).addTo(zonesLayer);
+        var ws_left_opening_zone_shape = L.polygon(data['ws_left_opening_zone'], {color: 'blue', opacity: 0.5}).addTo(openingZonesLayer);
         ws_left_opening_zone_shape.bindTooltip('WS Left Pattern Deployment Zone')
-        var ws_right_opening_zone_shape = L.polygon(data['ws_right_opening_zone'], {color: 'blue', opacity: 0.5}).addTo(zonesLayer);
+        var ws_right_opening_zone_shape = L.polygon(data['ws_right_opening_zone'], {color: 'blue', opacity: 0.5}).addTo(openingZonesLayer);
         ws_right_opening_zone_shape.bindTooltip('WS Right Pattern Deployment Zone')
 
         var ws_left_pattern = L.polyline(
             [data['jumprun_pos'], data['first_left_turn_pos'], data['second_left_turn_pos'], data['deploy_left_turn_pos']
-        ]).addTo(zonesLayer);
+        ]).addTo(wsLinesLayer);
+        var ws_left_pattern_arrows = L.polylineDecorator(ws_left_pattern, {
+            patterns: [
+                { offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 1, weight: 1}}) }
+            ]
+        }).addTo(wsLinesLayer);
+
 
         var ws_right_pattern = L.polyline(
             [data['jumprun_pos'], data['first_right_turn_pos'], data['second_right_turn_pos'], data['deploy_right_turn_pos']
-        ]).addTo(zonesLayer);
+        ]).addTo(wsLinesLayer);
+        var ws_right_pattern_arrows = L.polylineDecorator(ws_right_pattern, {
+            patterns: [
+                { offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 1, weight: 1}}) }
+            ]
+        }).addTo(wsLinesLayer);
+
+
+        var ws_performance_lines = L.polyline(
+            data['performance_lines'], {color: 'white'}
+        ).addTo(wspLinesLayer);
+        var ws_performance_lines_arrows = L.polylineDecorator(ws_performance_lines, {
+            patterns: [
+                { offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 1, weight: 1, color: 'white'}}) }
+            ]
+        }).addTo(wspLinesLayer);
+
+        var ws_performance_jumpruns = L.polyline(
+            data['performance_jumpruns'], {color: 'red'}
+        ).addTo(wspLinesLayer);
+        var ws_performance_lines_arrows = L.polylineDecorator(ws_performance_jumpruns, {
+            patterns: [
+                { offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 1, weight: 1, color: 'red'}}) }
+            ]
+        }).addTo(wspLinesLayer);
 
 	}
 
@@ -74,13 +112,19 @@
             zoomOffset: -1
 	    }).addTo(map);
 
+	    openingZonesLayer = L.layerGroup();
+        wspLinesLayer = L.layerGroup();
+        wsLinesLayer = L.layerGroup();
+
+        var dz_zone_shape = L.polygon([dz_data['zones']['coords']], {color: 'sienna', fillOpacity: 0}).addTo(map);
+        dz_zone_shape.bindTooltip(dz_data['zones']['name']);
+
         var general_lz_shape = L.polygon([dz_data['general_landing_zone']], {color: 'green', opacity: 0.5}).addTo(map);
         general_lz_shape.bindTooltip('General Landing Zone');
 
         var tandem_lz_shape = L.polygon([dz_data['tandem_landing_zone']], {color: 'yellow', opacity: 0.5}).addTo(map);
         tandem_lz_shape.bindTooltip('Tandem Landing Zone');
 
-        zonesLayer = L.layerGroup().addTo(map);
         zonesCalc = new ZonesCalc()
         updateMap(config);
 
@@ -92,13 +136,33 @@
             {
                 id: 'slider',
                 'orientation': 'vertical',
+                'position': 'topleft',
                 max: 360,
                 value: config['jumprun_heading'],
-                step: 1,
+                step: 5,
                 size: '250px',
                 logo: 'H'
             }
         ).addTo(map);
+
+        var overLayers = [
+            {
+                active: true,
+                name: "Opening Zones",
+                layer: openingZonesLayer
+            },
+            {
+                active: true,
+                name: "WS Lines",
+                layer: wsLinesLayer
+            },
+            {
+                active: false,
+                name: "WS Performance",
+                layer: wspLinesLayer
+            }
+        ]
+        L.control.panelLayers([], overLayers).addTo(map);
     }
 
     window.addEventListener('DOMContentLoaded', readyState);

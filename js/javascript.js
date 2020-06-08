@@ -11,7 +11,22 @@ var dz_data = {
         [48.486684, 35.628790],
         [48.486813, 35.629229],
         [48.486053, 35.629805]
-    ]
+    ],
+    'zones':  {
+        'coords': [[
+            [48.357088, 35.810172],
+            [48.291572, 35.717776],
+            [48.331188, 35.617525],
+            [48.453867, 35.542352],
+            [48.434082, 35.741823]
+        ],[
+            [48.453867, 35.542352],
+            [48.434082, 35.741823],
+            [48.567760, 35.630758],
+            [48.5356575,35.4954133]
+        ]],
+        'name': 'UKT814A/B'
+    }
 }
 
 var config = {
@@ -126,6 +141,78 @@ class ZonesCalc {
                 config['opening_zone_width_km'] / 2 + config['opening_zone_separation_km']
             )
         ]
+
+        // WS Performance Lines
+        var perf_lines5_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 5.0);
+        var perf_lines4_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 4.0);
+        var perf_lines3_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 3.0);
+        data['performance_lines'] = [
+            [
+                perf_lines5_pos,
+                dz_data['location']
+            ],
+            [
+                this._getShiftedPosition(
+                    perf_lines5_pos,
+                    config['jumprun_heading'] + 90,
+                    0.5
+                ),
+                this._getShiftedPosition(
+                    dz_data['location'], config['jumprun_heading'] + 90,
+                    0.5
+                )
+            ],
+            [
+                this._getShiftedPosition(
+                    perf_lines5_pos,
+                    config['jumprun_heading']-90,
+                    0.5
+                ),
+                this._getShiftedPosition(
+                    dz_data['location'], config['jumprun_heading']-90,
+                    0.5
+                )
+            ]
+        ]
+        data['performance_jumpruns'] = [
+            [
+                this._getShiftedPosition(
+                    perf_lines5_pos,
+                    config['jumprun_heading'] + 90,
+                    1.0
+                ),
+                this._getShiftedPosition(
+                    perf_lines5_pos,
+                    config['jumprun_heading'] - 90,
+                    1.0
+                )
+            ],
+            [
+                this._getShiftedPosition(
+                    perf_lines4_pos,
+                    config['jumprun_heading'] + 90,
+                    1.0
+                ),
+                this._getShiftedPosition(
+                    perf_lines4_pos,
+                    config['jumprun_heading'] - 90,
+                    1.0
+                )
+            ],
+            [
+                this._getShiftedPosition(
+                    perf_lines3_pos,
+                    config['jumprun_heading'] + 90,
+                    1.0
+                ),
+                this._getShiftedPosition(
+                    perf_lines3_pos,
+                    config['jumprun_heading'] - 90,
+                    1.0
+                )
+            ],
+        ]
+
         return data
     }
 
