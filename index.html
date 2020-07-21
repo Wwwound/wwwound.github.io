@@ -40,9 +40,15 @@
 	var zonesLayer;
 	var updateMap = function(config) {
 
+	    var getPopupTextByCoords = function(coords) {
+	        return coords[0] + ", " + coords[1]
+	    }
+
         openingZonesLayer.clearLayers();
+        landingZonesLayer.clearLayers();
         wsLinesLayer.clearLayers();
         wspLinesLayer.clearLayers();
+        jumprunMarkersLayer.clearLayers();
 
         var data = zonesCalc.getData(config)
         var jumprun_shape = L.polyline([dz_data['location'], data['jumprun_pos']], {color: 'red', opacity: 0.5}).addTo(openingZonesLayer);
@@ -54,6 +60,12 @@
 
         var general_opening_zone_shape = L.polygon(data['general_opening_zone'], {color: 'red', opacity: 0.5}).addTo(openingZonesLayer);
         general_opening_zone_shape.bindTooltip('No Fly Zone')
+
+        var general_lz_shape = L.polygon([dz_data['general_landing_zone']], {color: 'green', opacity: 0.5}).addTo(landingZonesLayer);
+        general_lz_shape.bindTooltip('General Landing Zone');
+
+        var tandem_lz_shape = L.polygon([dz_data['tandem_landing_zone']], {color: 'yellow', opacity: 0.5}).addTo(landingZonesLayer);
+        tandem_lz_shape.bindTooltip('Tandem Landing Zone');
 
         var ws_left_opening_zone_shape = L.polygon(data['ws_left_opening_zone'], {color: 'blue', opacity: 0.5}).addTo(openingZonesLayer);
         ws_left_opening_zone_shape.bindTooltip('WS Left Pattern Deployment Zone')
@@ -68,7 +80,6 @@
                 { offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 1, weight: 1}}) }
             ]
         }).addTo(wsLinesLayer);
-
 
         var ws_right_pattern = L.polyline(
             [data['jumprun_pos'], data['first_right_turn_pos'], data['second_right_turn_pos'], data['deploy_right_turn_pos']
@@ -88,10 +99,22 @@
                 { offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 1, weight: 1, color: 'white'}}) }
             ]
         }).addTo(wspLinesLayer);
+        L.marker(data['performance_lines'][0][1]).addTo(wspLinesLayer).bindPopup(getPopupTextByCoords(data['performance_lines'][0][1]));
+        L.marker(data['performance_lines'][1][1]).addTo(wspLinesLayer).bindPopup(getPopupTextByCoords(data['performance_lines'][1][1]));
+        L.marker(data['performance_lines'][2][1]).addTo(wspLinesLayer).bindPopup(getPopupTextByCoords(data['performance_lines'][2][1]));
+        L.marker(data['performance_lines'][3][1]).addTo(wspLinesLayer).bindPopup(getPopupTextByCoords(data['performance_lines'][3][1]));
+        L.marker(data['performance_lines'][4][1]).addTo(wspLinesLayer).bindPopup(getPopupTextByCoords(data['performance_lines'][4][1]));
 
         var ws_performance_jumpruns = L.polyline(
             data['performance_jumpruns'], {color: 'red'}
         ).addTo(wspLinesLayer);
+        L.marker(data['performance_jumpruns'][0][0]).addTo(jumprunMarkersLayer).bindPopup(getPopupTextByCoords(data['performance_jumpruns'][0][0]));
+        L.marker(data['performance_jumpruns'][0][1]).addTo(jumprunMarkersLayer).bindPopup(getPopupTextByCoords(data['performance_jumpruns'][0][1]));
+        L.marker(data['performance_jumpruns'][1][0]).addTo(jumprunMarkersLayer).bindPopup(getPopupTextByCoords(data['performance_jumpruns'][1][0]));
+        L.marker(data['performance_jumpruns'][1][1]).addTo(jumprunMarkersLayer).bindPopup(getPopupTextByCoords(data['performance_jumpruns'][1][1]));
+        L.marker(data['performance_jumpruns'][2][0]).addTo(jumprunMarkersLayer).bindPopup(getPopupTextByCoords(data['performance_jumpruns'][2][0]));
+        L.marker(data['performance_jumpruns'][2][1]).addTo(jumprunMarkersLayer).bindPopup(getPopupTextByCoords(data['performance_jumpruns'][2][1]));
+
         var ws_performance_lines_arrows = L.polylineDecorator(ws_performance_jumpruns, {
             patterns: [
                 { offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({pixelSize: 10, pathOptions: {fillOpacity: 1, weight: 1, color: 'red'}}) }
@@ -113,17 +136,13 @@
 	    }).addTo(map);
 
 	    openingZonesLayer = L.layerGroup();
+	    landingZonesLayer = L.layerGroup();
         wspLinesLayer = L.layerGroup();
         wsLinesLayer = L.layerGroup();
+        jumprunMarkersLayer = L.layerGroup();
 
         var dz_zone_shape = L.polygon([dz_data['zones']['coords']], {color: 'sienna', fillOpacity: 0}).addTo(map);
         dz_zone_shape.bindTooltip(dz_data['zones']['name']);
-
-        var general_lz_shape = L.polygon([dz_data['general_landing_zone']], {color: 'green', opacity: 0.5}).addTo(map);
-        general_lz_shape.bindTooltip('General Landing Zone');
-
-        var tandem_lz_shape = L.polygon([dz_data['tandem_landing_zone']], {color: 'yellow', opacity: 0.5}).addTo(map);
-        tandem_lz_shape.bindTooltip('Tandem Landing Zone');
 
         zonesCalc = new ZonesCalc()
         updateMap(config);
@@ -146,20 +165,30 @@
         ).addTo(map);
 
         var overLayers = [
-            {
-                active: true,
+            /*{
+                active: false,
                 name: "Opening Zones",
                 layer: openingZonesLayer
-            },
+            },*/
             {
-                active: true,
+                active: false,
+                name: "Landing Zones",
+                layer: landingZonesLayer
+            },
+            /*{
+                active: false,
                 name: "WS Lines",
                 layer: wsLinesLayer
+            },*/
+            {
+                active: true,
+                name: "WS Performance",
+                layer: wspLinesLayer
             },
             {
                 active: false,
-                name: "WS Performance",
-                layer: wspLinesLayer
+                name: "Jumprun Markers",
+                layer: jumprunMarkersLayer
             }
         ]
         L.control.panelLayers([], overLayers).addTo(map);

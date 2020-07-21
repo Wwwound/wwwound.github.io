@@ -143,8 +143,8 @@ class ZonesCalc {
         ]
 
         // WS Performance Lines
-        var perf_lines5_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 5.0);
-        var perf_lines4_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 4.0);
+        var perf_lines5_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 7.0);
+        var perf_lines4_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 5.0);
         var perf_lines3_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 3.0);
         data['performance_lines'] = [
             [
@@ -155,22 +155,44 @@ class ZonesCalc {
                 this._getShiftedPosition(
                     perf_lines5_pos,
                     config['jumprun_heading'] + 90,
-                    0.5
+                    0.6
                 ),
                 this._getShiftedPosition(
                     dz_data['location'], config['jumprun_heading'] + 90,
-                    0.5
+                    0.6
+                )
+            ],
+            [
+                this._getShiftedPosition(
+                    perf_lines5_pos,
+                    config['jumprun_heading'] + 90,
+                    0.6*2
+                ),
+                this._getShiftedPosition(
+                    dz_data['location'], config['jumprun_heading'] + 90,
+                    0.6*2
                 )
             ],
             [
                 this._getShiftedPosition(
                     perf_lines5_pos,
                     config['jumprun_heading']-90,
-                    0.5
+                    0.6
                 ),
                 this._getShiftedPosition(
                     dz_data['location'], config['jumprun_heading']-90,
-                    0.5
+                    0.6
+                )
+            ],
+            [
+                this._getShiftedPosition(
+                    perf_lines5_pos,
+                    config['jumprun_heading'] - 90,
+                    0.6*2
+                ),
+                this._getShiftedPosition(
+                    dz_data['location'], config['jumprun_heading'] - 90,
+                    0.6*2
                 )
             ]
         ]
@@ -179,36 +201,36 @@ class ZonesCalc {
                 this._getShiftedPosition(
                     perf_lines5_pos,
                     config['jumprun_heading'] + 90,
-                    1.0
+                    1.8
                 ),
                 this._getShiftedPosition(
                     perf_lines5_pos,
                     config['jumprun_heading'] - 90,
-                    1.0
+                    1.2
                 )
             ],
             [
                 this._getShiftedPosition(
                     perf_lines4_pos,
                     config['jumprun_heading'] + 90,
-                    1.0
+                    1.8
                 ),
                 this._getShiftedPosition(
                     perf_lines4_pos,
                     config['jumprun_heading'] - 90,
-                    1.0
+                    1.2
                 )
             ],
             [
                 this._getShiftedPosition(
                     perf_lines3_pos,
                     config['jumprun_heading'] + 90,
-                    1.0
+                    1.8
                 ),
                 this._getShiftedPosition(
                     perf_lines3_pos,
                     config['jumprun_heading'] - 90,
-                    1.0
+                    1.2
                 )
             ],
         ]
