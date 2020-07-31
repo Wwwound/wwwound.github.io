@@ -234,7 +234,7 @@ class ZonesCalc {
                 this._getShiftedPosition(
                     perf_lines5_pos,
                     config['jumprun_heading'] - 90,
-                    1.2
+                    1.2 + corrector4[0] + corrector5[0]
                 )
             ],
             [
@@ -246,7 +246,7 @@ class ZonesCalc {
                 this._getShiftedPosition(
                     perf_lines4_pos,
                     config['jumprun_heading'] - 90,
-                    1.2
+                    1.2 + corrector4[0] + corrector5[0]
                 )
             ],
             [
@@ -258,7 +258,7 @@ class ZonesCalc {
                 this._getShiftedPosition(
                     perf_lines3_pos,
                     config['jumprun_heading'] - 90,
-                    1.2
+                    1.2 + corrector4[0] + corrector5[0]
                 )
             ],
         ]
