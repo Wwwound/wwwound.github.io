@@ -166,7 +166,7 @@ class ZonesCalc {
                         dz_data['location'], config['jumprun_heading'] + 90,
                         0.6*2 + corrector1[0] + corrector2[0]
                     ),
-                    -config['jumprun_heading'],
+                    config['jumprun_heading']+180,
                     corrector1[1]
                 )
             ],
@@ -182,7 +182,7 @@ class ZonesCalc {
                         dz_data['location'], config['jumprun_heading'] + 90,
                         0.6 + corrector2[0]
                     ),
-                    -config['jumprun_heading'],
+                    config['jumprun_heading']+180,
                     corrector2[1]
                 )
             ],
@@ -203,7 +203,7 @@ class ZonesCalc {
                         dz_data['location'], config['jumprun_heading']-90,
                         0.6 + corrector4[0]
                     ),
-                    -config['jumprun_heading'],
+                    config['jumprun_heading']+180,
                     corrector4[1]
                 )
             ],
@@ -219,7 +219,7 @@ class ZonesCalc {
                         dz_data['location'], config['jumprun_heading'] - 90,
                         0.6*2 + corrector4[0] + corrector5[0]
                     ),
-                    -config['jumprun_heading'],
+                    config['jumprun_heading']+180,
                     corrector5[1]
                 )
             ]
