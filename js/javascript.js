@@ -33,7 +33,7 @@ var config = {
     access_token: 'pk.eyJ1Ijoid3d3b3VuZCIsImEiOiJja2E4OGtxZWQwOXBwMnhwZzV1N3A4YTViIn0.jisawzBklAhA_seTnfVTJQ',
 
     jumprun_len_km: 1.0,
-    jumprun_heading: 270,
+    jumprun_heading: 40,
 
     first_part_len_km: 0.500,
     second_part_len_km: 0.500,
@@ -143,15 +143,31 @@ class ZonesCalc {
         ]
 
         // WS Performance Lines (shift from center, length)
+        /* 270 correctors
         var corrector1 = [0.0, -0.50];
         var corrector2 = [0, 0.225];
         var corrector3 = [0, 0];
         var corrector4 = [0.05, 0.358];
         var corrector5 = [0.055, -0.37];
+        */
 
-        var perf_lines5_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 7.0);
-        var perf_lines4_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 5.0);
-        var perf_lines3_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 3.0);
+        /* 60 corrector
+        var corrector1 = [0.175-0.085, 0.99];
+        var corrector2 = [0.085, 0.94];
+        var corrector3 = [0.015, 0.91];
+        var corrector4 = [0.0, 1.21];
+        var corrector5 = [0.02, 1.79];
+        */
+
+        var corrector1 = [-0.215+0.155, 1.37];
+        var corrector2 = [-0.05, 1.24];
+        var corrector3 = [-0.155, 0.93];
+        var corrector4 = [0.0, 1.3];
+        var corrector5 = [0.09, 1.1];
+
+        var perf_lines5_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 4.0);
+        var perf_lines4_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 3.0);
+        var perf_lines3_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 2.0);
 
         data['performance_lines'] = [
             // line1
@@ -188,8 +204,20 @@ class ZonesCalc {
             ],
             // line3
             [
-                perf_lines5_pos,
-                this._getShiftedPosition(dz_data['location'], -config['jumprun_heading'], corrector3[1])
+                this._getShiftedPosition(
+                    perf_lines5_pos,
+                    config['jumprun_heading'] + 90,
+                    0.0 + corrector3[0]
+                ),
+                this._getShiftedPosition(
+                    this._getShiftedPosition(
+                        dz_data['location'], config['jumprun_heading'] + 90,
+                        0.0 + corrector3[0]
+                    ),
+                    config['jumprun_heading']+180,
+                    corrector3[1]
+                )
+//                this._getShiftedPosition(dz_data['location'], config['jumprun_heading']-90, corrector3[1])
             ],
             // line4
             [
@@ -229,7 +257,7 @@ class ZonesCalc {
                 this._getShiftedPosition(
                     perf_lines5_pos,
                     config['jumprun_heading'] + 90,
-                    1.8 + corrector1[0] + corrector2[0]
+                    2.1 + corrector1[0] + corrector2[0]
                 ),
                 this._getShiftedPosition(
                     perf_lines5_pos,
@@ -241,7 +269,7 @@ class ZonesCalc {
                 this._getShiftedPosition(
                     perf_lines4_pos,
                     config['jumprun_heading'] + 90,
-                    1.8 + corrector1[0] + corrector2[0]
+                    2.1 + corrector1[0] + corrector2[0]
                 ),
                 this._getShiftedPosition(
                     perf_lines4_pos,
@@ -253,7 +281,7 @@ class ZonesCalc {
                 this._getShiftedPosition(
                     perf_lines3_pos,
                     config['jumprun_heading'] + 90,
-                    1.8 + corrector1[0] + corrector2[0]
+                    2.1 + corrector1[0] + corrector2[0]
                 ),
                 this._getShiftedPosition(
                     perf_lines3_pos,

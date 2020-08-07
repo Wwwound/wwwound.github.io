@@ -108,12 +108,12 @@
         var ws_performance_jumpruns = L.polyline(
             data['performance_jumpruns'], {color: 'red'}
         ).addTo(wspLinesLayer);
-        L.marker(data['performance_jumpruns'][0][0]).addTo(jumprunMarkersLayer).bindPopup(getPopupTextByCoords(data['performance_jumpruns'][0][0]));
-        L.marker(data['performance_jumpruns'][0][1]).addTo(jumprunMarkersLayer).bindPopup(getPopupTextByCoords(data['performance_jumpruns'][0][1]));
-        L.marker(data['performance_jumpruns'][1][0]).addTo(jumprunMarkersLayer).bindPopup(getPopupTextByCoords(data['performance_jumpruns'][1][0]));
-        L.marker(data['performance_jumpruns'][1][1]).addTo(jumprunMarkersLayer).bindPopup(getPopupTextByCoords(data['performance_jumpruns'][1][1]));
-        L.marker(data['performance_jumpruns'][2][0]).addTo(jumprunMarkersLayer).bindPopup(getPopupTextByCoords(data['performance_jumpruns'][2][0]));
-        L.marker(data['performance_jumpruns'][2][1]).addTo(jumprunMarkersLayer).bindPopup(getPopupTextByCoords(data['performance_jumpruns'][2][1]));
+        L.marker(data['performance_jumpruns'][0][0]).addTo(jumprunMarkersLayer).bindPopup("4km: " + getPopupTextByCoords(data['performance_jumpruns'][0][0]));
+        L.marker(data['performance_jumpruns'][0][1]).addTo(jumprunMarkersLayer).bindPopup("4km: " + getPopupTextByCoords(data['performance_jumpruns'][0][1]));
+        L.marker(data['performance_jumpruns'][1][0]).addTo(jumprunMarkersLayer).bindPopup("3km: " + getPopupTextByCoords(data['performance_jumpruns'][1][0]));
+        L.marker(data['performance_jumpruns'][1][1]).addTo(jumprunMarkersLayer).bindPopup("3km: " + getPopupTextByCoords(data['performance_jumpruns'][1][1]));
+        L.marker(data['performance_jumpruns'][2][0]).addTo(jumprunMarkersLayer).bindPopup("2km: " + getPopupTextByCoords(data['performance_jumpruns'][2][0]));
+        L.marker(data['performance_jumpruns'][2][1]).addTo(jumprunMarkersLayer).bindPopup("2km: " + getPopupTextByCoords(data['performance_jumpruns'][2][1]));
 
         var ws_performance_lines_arrows = L.polylineDecorator(ws_performance_jumpruns, {
             patterns: [
