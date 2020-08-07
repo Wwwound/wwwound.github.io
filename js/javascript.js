@@ -160,9 +160,9 @@ class ZonesCalc {
         */
 
         var corrector1 = [-0.215+0.155, 1.37];
-        var corrector2 = [-0.05, 1.24];
+        var corrector2 = [0.05, 1.24];
         var corrector3 = [-0.155, 0.93];
-        var corrector4 = [0.0, 1.3];
+        var corrector4 = [0.225, 1.25];
         var corrector5 = [0.09, 1.1];
 
         var perf_lines5_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 4.0);
