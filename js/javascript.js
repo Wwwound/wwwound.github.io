@@ -33,7 +33,7 @@ var config = {
     access_token: 'pk.eyJ1Ijoid3d3b3VuZCIsImEiOiJja2E4OGtxZWQwOXBwMnhwZzV1N3A4YTViIn0.jisawzBklAhA_seTnfVTJQ',
 
     jumprun_len_km: 1.0,
-    jumprun_heading: 40,
+    jumprun_heading: 10,
 
     first_part_len_km: 0.500,
     second_part_len_km: 0.500,
@@ -159,11 +159,11 @@ class ZonesCalc {
         var corrector5 = [0.02, 1.79];
         */
 
-        var corrector1 = [-0.215+0.155, 1.37];
-        var corrector2 = [-0.05, 1.24];
-        var corrector3 = [-0.155, 0.93];
-        var corrector4 = [0.225, 1.25];
-        var corrector5 = [0.09, 1.1];
+        var corrector1 = [0, 0.40];
+        var corrector2 = [0.0, -0.15];
+        var corrector3 = [0, 0];
+        var corrector4 = [0, 0.5];
+        var corrector5 = [0, 0.255];
 
         var perf_lines5_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 4.0);
         var perf_lines4_pos = this._getShiftedPosition(dz_data['location'], config['jumprun_heading'], 3.0);
